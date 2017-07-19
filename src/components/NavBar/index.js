@@ -10,7 +10,9 @@ class NavBar extends React.Component {
 
     return (
       <div role="nav" className={styles['nav-bar']}>
-        {pages.map(this._renderLink)}
+        <div className={styles['nav-bar__inner']}>
+          {pages.map(this._renderLink)}
+        </div>
       </div>
     )
   }

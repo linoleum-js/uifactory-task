@@ -24,12 +24,8 @@ if (bodyElement && typeof Modal.setAppElement === "function") {
 }
 
 let openModals = [];
-addEventListener(document, "keyup", (e) => {
-  if (e.keyCode === 27) {
-    const currentModal = last(openModals);
-    currentModal && currentModal.props.onRequestHide && currentModal.props.onRequestHide();
-  }
-});
+// React modal already implements modal closing on esc press
+
 
 // Figure out if the modal is open or closed and ensure the proper side effects
 // Open modals need the following things to happen:
@@ -66,7 +62,6 @@ function modalIsOpen (modalComponent) {
 function modalIsNotOpen (modalComponent) {
   bodyElement.classList.remove(MODAL_OPEN_CLASSNAME);
   bodyElement.classList.remove(ADD_SCROLLBAR_CLASSNAME);
-
   openModals = without(openModals, modalComponent);
 }
 
@@ -114,7 +109,7 @@ const BaseModal = React.createClass({
         {...props}
         isOpen={isOpen == null ? true : isOpen}
         onRequestClose={onRequestHide}
-        shouldCloseOnOverlayClick={!!requestHideOnOverlayClick}
+        shouldCloseOnOverlayClick={true}
         style={{content: contentStyle, overlay: combinedOverlayStyle}}
       />
     );

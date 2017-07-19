@@ -10,15 +10,27 @@ const Dashboard = props => {
   let selectedStudentid;
   if (props.match.params && props.match.params.studentId) {
     selectedStudentid = props.match.params.studentId;
-    const spotlightedStudent = props.students.find(
+  } else {
+    // if we select item without routing
+    selectedStudentid = props.selectedItem;
+  }
+  if (selectedStudentid) {
+    const spotlightedStudent = props.list.find(
       student => student._id == selectedStudentid
     );
-    spotlight = <StudentSpotLight student={spotlightedStudent} />;
+    spotlight = <StudentSpotLight item={spotlightedStudent} getAvatar={props.getAvatar} />;
   }
   return (
     <HLayout width="100%" gutter={7}>
       <HLayoutItem flexGrow={1}>
-        <SimpleLeftBar students={props.students} />
+        <SimpleLeftBar
+          list={props.list}
+          getAvatar={props.getAvatar}
+          title={props.title}
+          redirect={props.redirect}
+          onSelect={props.onSelect}
+          selectedItem={props.selectedItem}
+        />
       </HLayoutItem>
       <HLayoutItem flexGrow={1}>
         {selectedStudentid &&

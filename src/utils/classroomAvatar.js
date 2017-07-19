@@ -1,0 +1,1 @@
+export const getClassroomAvatar = (student) => `imgs/classes/${student._id}.jpg`

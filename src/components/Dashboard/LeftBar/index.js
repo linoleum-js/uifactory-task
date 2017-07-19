@@ -4,47 +4,72 @@ import { NavLink } from 'react-router-dom';
 import { HLayout, HLayoutItem, VLayout, VLayoutItem } from 'react-flexbox-layout';
 
 import { fullName } from 'utils/name';
-import { getStudentAvatar } from 'utils/studentAvatar';
 
 class DashboardLeftBar extends React.Component {
 
   static propTypes = {
-    students: PropTypes.array.isRequired,
+    list: PropTypes.array.isRequired,
+    getAvatar: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired
   };
 
   render() {
 
-    const students = this.props.students;
+    const {list, title, redirect}= this.props;
+    const renderer = redirect ? this._renderItem : this._renderItemNoRedirect;
     return (
       <div>
-        <h3 style={titleStyle}>Students</h3>
-        {students.map(this._renderStudent)}
+        <h3 style={titleStyle}>{title}</h3>
+        {list.map(renderer.bind(this))}
       </div>
     )
   }
 
-  _renderStudent(student) {
-    const label = "";
+  _renderItem(item) {
     return (
       <NavLink
-        key={student._id}
-        to={`/students/${student._id}`}
+        key={item._id}
+        to={`/students/${item._id}`}
         style={entryStyle}
         activeStyle={selectedEntryStyle}
       >
-        <HLayout key={student._id} height="100%" alignItems="middle" gutter={7}>
-          <div
-            style={{
-              ...studentAvatarStyle,
-              backgroundImage: `url(${getStudentAvatar(student)})`,
-            }}
-          />
-          <HLayoutItem flexGrow style={studentNameStyle}>
-            <span>{fullName(student)}</span>
-          </HLayoutItem>
-          <span>{label}</span>
-        </HLayout>
+        {this._renderItemContent(item)}
       </NavLink>
+    );
+  }
+
+  _renderItemNoRedirect(item) {
+    let style = Object.assign({}, entryStyle);
+    if (this.props.selectedItem === item._id) {
+      Object.assign(style, selectedEntryStyle);
+    }
+
+    return (
+      <span
+        key={item._id}
+        style={style}
+        onClick={() => { this.props.onSelect(item._id); }}
+      >
+        {this._renderItemContent(item)}
+      </span>
+    );
+  }
+
+  _renderItemContent(item) {
+    const label = "";
+    return (
+      <HLayout key={item._id} height="100%" alignItems="middle" gutter={7}>
+        <div
+          style={{
+              ...studentAvatarStyle,
+              backgroundImage: `url(${this.props.getAvatar(item)})`,
+            }}
+        />
+        <HLayoutItem flexGrow style={studentNameStyle}>
+          <span>{fullName(item)}</span>
+        </HLayoutItem>
+        <span>{label}</span>
+      </HLayout>
     );
   }
 }
@@ -67,6 +92,7 @@ const entryStyle = {
   backgroundColor: "white",
   textDecoration: "none",
   color: "black",
+  cursor: "pointer"
 };
 
 const selectedEntryStyle = {

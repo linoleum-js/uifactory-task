@@ -1,6 +1,7 @@
 export function fullName (obj) {
   if (!obj) return "";
-  const {firstName, lastName} = obj;
+  const {firstName, lastName, name} = obj;
+  if (name) { return name; }
   if (!firstName && !lastName) return "";
   return [(firstName || ""), (lastName || "")].join(" ").trim();
 }

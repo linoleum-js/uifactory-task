@@ -2,6 +2,7 @@ import React from "react";
 
 import NavBar from "components/NavBar";
 import Dashboard from "components/Dashboard";
+import { getStudentAvatar } from 'utils/studentAvatar';
 
 const students = [
   { _id: "1", firstName: "John", lastName: "Walker" },
@@ -14,7 +15,13 @@ export default props => {
   return (
     <div>
       <NavBar />
-      <Dashboard students={students} />
+      <Dashboard
+        list={students}
+        baseUrl="students"
+        getAvatar={getStudentAvatar}
+        title="Students"
+        redirect={true}
+      />
     </div>
   );
 };
